@@ -18,13 +18,13 @@ class AdminBaseController extends Controller{
     public function init() {
         parent::init();
         $this->menu_data = RbacMenu::model()->getUnlimitData();
-        Utils::printr($this->menu_data);
+        //Utils::printr($this->menu_data);
     }
     
     
     
     public function beforeAction($action) {
         parent::beforeAction($action);
-        
+        return true;
     }
 }

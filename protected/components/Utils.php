@@ -1114,28 +1114,29 @@ class Utils {
     }
 
     /**
+     * 将二维数组的某个值如id的值作为上级数组的key
+     * @param type $items
+     * @param type $key
+     * @return type
+     */
+    public static function getSubColumnValueToParentKey($items, $key) {
+        return array_combine(array_column($items, $key), $items);
+    }
+
+    /**
      * 取无限级
      */
-    public static $sub_unlimit_data = array();
-
     public static function getSubUnlimit($model) {
-        //print_r($model);exit;
-        if ($model) {
-            foreach ($model as $k => $v) {
-                $v_data = $v->attributes;
-                if ($v->pid == 0) {
-                    self::$sub_unlimit_data[$v->id] = $v_data;
-                } else {
-                    if(!isset(self::$sub_unlimit_data[$v->pid])){
-                        self::$sub_unlimit_data[$v->pid] = $v_data;
-                    }
-                    self::$sub_unlimit_data[$v->pid]['sub'][$v->id] = $v_data;
-                }
+        $items = self::getSubColumnValueToParentKey(self::object2array($model), 'id');
+        $tree = array();
+        foreach ($items as $item) {
+            if (isset($items[$item['pid']])) {
+                $items[$item['pid']]['sub'][$item['id']] = &$items[$item['id']];
+            } else {
+                $tree[$item['id']] = &$items[$item['id']];
             }
         }
-        $return = self::$sub_unlimit_data;
-        self::$sub_unlimit_data = array();
-        return $return;
+        return $tree;
     }
 
 }

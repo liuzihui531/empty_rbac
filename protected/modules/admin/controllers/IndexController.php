@@ -11,7 +11,7 @@
  *
  * @author Dell
  */
-class IndexController extends Controller{
+class IndexController extends AdminBaseController{
     //put your code here
     public function actionIndex(){
         $this->breadcrumbs = array('控制台');

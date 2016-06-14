@@ -169,60 +169,37 @@ window.jQuery || document.write("<script src='<?php echo Yii::app()->params['hos
                                 <i class="icon-dashboard"></i>
                                 <span class="menu-text"> 控制台 </span>
                             </a>
-
                         </li>
-                        <li <?php if (in_array($controller_id, array('news_category', 'news'))): ?>class="active open"<?php endif; ?>>
-                            <a href="#" class="dropdown-toggle">
-                                <i class="icon-edit"></i>
-                                <span class="menu-text"> 新闻资讯 </span>
+                        <?php foreach ($this->menu_data['sub_limit'] as $k => $v): ?>
+                            <?php if (!isset($v['sub'])): ?>
+                                <li <?php if(isset($v['controller']) && $v['controller'] == $controller_id): ?>class="active"<?php endif; ?>>
+                                    <a href="<?php echo $this->createUrl($v['controller_action']) ?>">
+                                        <i class="icon-dashboard"></i>
+                                        <span class="menu-text"> <?php echo $v['title'] ?> </span>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li <?php if (in_array($controller_id, $v['controller_list'])): ?>class="active open"<?php endif; ?>>
+                                    <a href="#" class="dropdown-toggle">
+                                        <i class="icon-edit"></i>
+                                        <span class="menu-text"> <?php echo $v['title'] ?> </span>
 
-                                <b class="arrow icon-angle-down"></b>
-                            </a>
-
-                            <ul class="submenu">
-                                <li <?php if ($controller_id == 'news_category'): ?>class="active"<?php endif; ?>>
-                                    <a <?php if ($controller_id == 'news_category'): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl('/admin/news_category') ?>">
-                                        <i class="icon-double-angle-right"></i>
-                                        分类管理
+                                        <b class="arrow icon-angle-down"></b>
                                     </a>
+                                    <ul class="submenu">
+                                        <?php foreach ($v['sub'] as $kk => $vv): ?>
+                                            <li <?php if (isset($vv['controller']) && $controller_id == $vv['controller']): ?>class="active"<?php endif; ?>>
+                                                <a <?php if (isset($vv['controller']) && $controller_id == $vv['controller']): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl($vv['controller_action']) ?>">
+                                                    <i class="icon-double-angle-right"></i>
+                                                    <?php echo $vv['title'] ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 </li>
-
-                                <li <?php if ($controller_id == 'news'): ?>class="active"<?php endif; ?>>
-                                    <a <?php if ($controller_id == 'news'): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl('/admin/news') ?>">
-                                        <i class="icon-double-angle-right"></i>
-                                        资讯管理
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li <?php if (in_array($controller_id, array('rbac_menu','admin','role'))): ?>class="active open"<?php endif; ?>>
-                            <a href="#" class="dropdown-toggle">
-                                <i class="icon-edit"></i>
-                                <span class="menu-text"> 权限配置 </span>
-
-                                <b class="arrow icon-angle-down"></b>
-                            </a>
-                            <ul class="submenu">
-                                <li <?php if ($controller_id == 'rbac_menu'): ?>class="active"<?php endif; ?>>
-                                    <a <?php if ($controller_id == 'rbac_menu'): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl('/admin/rbac_menu') ?>">
-                                        <i class="icon-double-angle-right"></i>
-                                        菜单管理
-                                    </a>
-                                </li>
-                                <li <?php if ($controller_id == 'admin'): ?>class="active"<?php endif; ?>>
-                                    <a <?php if ($controller_id == 'admin'): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl('/admin/admin') ?>">
-                                        <i class="icon-double-angle-right"></i>
-                                        管理员管理
-                                    </a>
-                                </li>
-                                <li <?php if ($controller_id == 'role'): ?>class="active"<?php endif; ?>>
-                                    <a <?php if ($controller_id == 'role'): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl('/admin/role') ?>">
-                                        <i class="icon-double-angle-right"></i>
-                                        角色管理
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        
                     </ul><!-- /.nav-list -->
 
                     <div class="sidebar-collapse" id="sidebar-collapse">

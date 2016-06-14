@@ -67,21 +67,32 @@ class RbacMenu extends CActiveRecord {
     }
 
     private function getUnLimitClass($model) {
-        $arr = Utils::getUnLimitClass(Utils::object2array($model));
+        $unlimit_data = Utils::getUnLimitClass(Utils::object2array($model));
         $sub_limit = Utils::getSubUnlimit($model);
-        $unlimit_data = array();
-        $action_data = array();
-        if ($arr) {
-            foreach ($arr as $k => $v) {
-                $unlimit_data[$v['id']] = $v;
-                if ($v['controller_action'] != "#") {
-                    $action_data[$v['controller_action']] = $v;
+        foreach ($sub_limit as $k => $v) {
+            $controller = array();
+            if (isset($v['sub'])) {
+                foreach ($v['sub'] as $kk => $vv) {
+                    if (strstr($vv['controller_action'], "/")) {
+                        $controller_action = explode("/", $vv['controller_action']);
+                        $controller[] = $controller_action[0];
+                        $v['sub'][$kk]['controller'] = $controller_action[0];
+                        $v['sub'][$kk]['action'] = $controller_action[1];
+                    }
+                }
+            } else {
+                if (strstr($v['controller_action'], "/")) {
+                    $controller_action = explode("/", $v['controller_action']);
+                    $controller[] = $controller_action[0];
+                    $v['controller'] = $controller_action[0];
+                    $v['action'] = $controller_action[1];
                 }
             }
+            $v['controller_list'] = $controller;
+            $sub_limit[$k] = $v; 
         }
         return array(
             'unlimit_data' => $unlimit_data,
-            'action_data' => $action_data,
             'sub_limit' => $sub_limit,
         );
     }
