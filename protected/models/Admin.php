@@ -17,6 +17,32 @@
  */
 class Admin extends CActiveRecord {
 
+    /**
+     * 获取管理员列表
+     * @param type $platform
+     * @param type $show_page
+     * @param type $pageSize
+     * @return type
+     */
+    public function getList($platform = 'admin', $show_page = true, $pageSize = 10) {
+        $criteria = new CDbCriteria();
+        //搜索项
+        $title = Yii::app()->request->getParam('role_name', '');
+        if ($title) {
+            $criteria->addSearchCondition('role_name', $title);
+        }
+        if ($platform == 'admin') {
+            $criteria->addCondition("username <> 'admin'");
+        }
+        $pager = new CPagination($this->count($criteria));
+        if ($show_page) {
+            $pager->pageSize = $pageSize;
+            $pager->applyLimit($criteria);
+        }
+        $model = $this->findAll($criteria);
+        return array('model' => $model, 'pager' => $pager);
+    }
+
     public $password2;
 
     public function getStatus($key = '') {
@@ -28,25 +54,6 @@ class Admin extends CActiveRecord {
             return $return[$key];
         }
         return $return;
-    }
-
-    public function getList($show_page = true, $limit = 10) {
-        $criteria = new CDbCriteria();
-        $criteria->order = 'id desc';
-        $search_c = Yii::app()->request->getParam('search_condition', '');
-        $search_v = Yii::app()->request->getParam('search_value', '');
-        
-        if (in_array($search_c, array('username')) && $search_v) {
-            $criteria->addSearchCondition($search_c, $search_v);
-        }
-        $pager = new CPagination(Admin::model()->count($criteria));
-
-        if ($show_page || $export_limit) {
-            $pager->pageSize = $limit;
-            $pager->applyLimit($criteria);
-        }
-        $model = Admin::model()->findAll($criteria);
-        return array('model' => $model, 'pager' => $pager);
     }
 
     public function getAdmin() {
@@ -70,11 +77,11 @@ class Admin extends CActiveRecord {
             array('status, last_login, role_id, login_num, created', 'numerical', 'integerOnly' => true),
             array('username, create_by', 'length', 'max' => 16),
             array('username', 'unique'),
-            array('username', 'required', 'on' => 'create'),
-            array('password', 'required', 'on' => 'create'),
+            array('username,password,role_id', 'required', 'on' => 'create'),
             //array('password2','required','on'=>'create'),
             //array('password2', 'compare', 'compareAttribute' => 'password', 'message' => '两次密码不一致'),
-            array('password, last_ip', 'length', 'max' => 32),
+            array('password, last_ip,realname', 'length', 'max' => 32),
+            array('remark','safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, username, password, status, last_login, last_ip, role_id, login_num, create_by, created', 'safe', 'on' => 'search'),
@@ -88,6 +95,7 @@ class Admin extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'rbac_role' => array(self::BELONGS_TO, 'RbacRole', 'role_id'),
         );
     }
 
@@ -97,7 +105,7 @@ class Admin extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'username' => '客服用户名',
+            'username' => '用户名',
             'password' => '密码',
             'status' => '状态',
             'last_login' => '最后登录时间',
@@ -106,6 +114,8 @@ class Admin extends CActiveRecord {
             'login_num' => '登录次数',
             'create_by' => '创建人',
             'created' => '创建时间',
+            'realname' => '真实姓名',
+            'remark' => '备注',
         );
     }
 

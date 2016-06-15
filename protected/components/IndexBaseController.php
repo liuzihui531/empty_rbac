@@ -17,5 +17,6 @@ class IndexBaseController extends Controller {
     public function init() {
         parent::init();
     }
+    
 
 }

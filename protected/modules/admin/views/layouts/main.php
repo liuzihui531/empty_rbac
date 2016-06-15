@@ -171,6 +171,7 @@ window.jQuery || document.write("<script src='<?php echo Yii::app()->params['hos
                             </a>
                         </li>
                         <?php foreach ($this->menu_data['sub_limit'] as $k => $v): ?>
+                            <?php if(!in_array($v['id'], $this->permission)) {continue;} ?>
                             <?php if (!isset($v['sub'])): ?>
                                 <li <?php if(isset($v['controller']) && $v['controller'] == $controller_id): ?>class="active"<?php endif; ?>>
                                     <a href="<?php echo $this->createUrl($v['controller_action']) ?>">
@@ -188,6 +189,7 @@ window.jQuery || document.write("<script src='<?php echo Yii::app()->params['hos
                                     </a>
                                     <ul class="submenu">
                                         <?php foreach ($v['sub'] as $kk => $vv): ?>
+                                            <?php if(!in_array($vv['id'], $this->permission)) {continue;} ?>
                                             <li <?php if (isset($vv['controller']) && $controller_id == $vv['controller']): ?>class="active"<?php endif; ?>>
                                                 <a <?php if (isset($vv['controller']) && $controller_id == $vv['controller']): ?>class="active"<?php endif; ?> href="<?php echo $this->createUrl($vv['controller_action']) ?>">
                                                     <i class="icon-double-angle-right"></i>

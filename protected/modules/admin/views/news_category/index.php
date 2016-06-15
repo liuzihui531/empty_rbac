@@ -14,8 +14,12 @@
                                 搜索
                                 <i class="icon-search icon-on-right bigger-110"></i>
                             </button>
+                            <?php if($this->checkPermission($this->id."/create")): ?>
                             <a href="<?php echo $this->createUrl('create') ?>" class="btn btn-primary btn-sm">添加</a>
+                            <?php endif; ?>
+                            <?php if($this->checkPermission($this->id."/delete")): ?>
                             <a href="javascript:void(0)" data-url="<?php echo $this->createUrl('delete') ?>" class="btn btn-danger delete btn-sm">删除</a>
+                            <?php endif; ?>
                         </form>
                     </div>
                 </div>
@@ -52,8 +56,12 @@
                                 <td><?php echo $v->sort ?></td>
                                 <td><?php echo date('Y-m-d H:i:s', $v->created) ?></td>
                                 <td>
+                                    <?php if($this->checkPermission($this->id."/update")): ?>
                                     <a href="<?php echo $this->createUrl('update', array('id' => $v->id)) ?>">修改</a>
+                                    <?php endif; ?>
+                                    <?php if($this->checkPermission($this->id."/delete")): ?>
                                     <a href="javascript:void(0)" class="delete-single" data-url="<?php echo $this->createUrl('delete', array('id' => $v->id)) ?>">删除</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -39,6 +39,12 @@ class RbacRole extends CActiveRecord {
         $model = $this->findAll($criteria);
         return array('model' => $model, 'pager' => $pager);
     }
+    
+    public function getKv(){
+        $model = Yii::app()->db->createCommand("select id,role_name from rbac_role")->query();
+        $list_data = CHtml::listData($model, 'id', 'role_name');
+        return $list_data;
+    }
 
     /**
      * @return string the associated database table name

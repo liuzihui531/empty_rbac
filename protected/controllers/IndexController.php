@@ -9,4 +9,5 @@ Class IndexController extends IndexBaseController{
     public function actionIndex(){
         $this->render('index');
     }
+    
 }

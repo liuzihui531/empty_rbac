@@ -14,7 +14,9 @@
                                 搜索
                                 <i class="icon-search icon-on-right bigger-110"></i>
                             </button>
-                            <a href="<?php echo $this->createUrl('create') ?>" class="btn btn-primary btn-sm">添加</a>
+                            <?php if ($this->checkPermission($this->id . "/create")): ?>
+                                <a href="<?php echo $this->createUrl('create') ?>" class="btn btn-primary btn-sm">添加</a>
+                            <?php endif; ?>
                         </form>
                     </div>
                 </div>
@@ -35,13 +37,17 @@
                     <tbody>
                         <?php foreach ($unlimit_data as $k => $v): ?>
                             <tr>
-                                <td><?php if($v['level'] > 1): ?><?php echo $v['html'] ?>┗━<?php endif; ?><?php echo $v['title'] ?></td>
+                                <td><?php if ($v['level'] > 1): ?><?php echo $v['html'] ?>┗━<?php endif; ?><?php echo $v['title'] ?></td>
                                 <td><?php echo $v['controller_action'] ?></td>
                                 <td><?php echo $show_data[$v['is_show']] ?></td>
                                 <td><?php echo $v['sorting'] ?></td>
                                 <td>
-                                    <a href="<?php echo $this->createUrl('update', array('id' => $v['id'])) ?>">修改</a>
-                                    <a href="javascript:void(0)" class="delete-single" data-url="<?php echo $this->createUrl('delete', array('id' => $v['id'])) ?>">删除</a>
+                                    <?php if ($this->checkPermission($this->id . "/update")): ?>
+                                        <a href="<?php echo $this->createUrl('update', array('id' => $v['id'])) ?>">修改</a>
+                                    <?php endif; ?>
+                                    <?php if ($this->checkPermission($this->id . "/delete")): ?>
+                                        <a href="javascript:void(0)" class="delete-single" data-url="<?php echo $this->createUrl('delete', array('id' => $v['id'])) ?>">删除</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

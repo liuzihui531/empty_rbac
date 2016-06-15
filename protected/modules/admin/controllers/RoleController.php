@@ -79,9 +79,21 @@ class RoleController extends AdminBaseController {
     /**
      * 编辑权限
      */
-    public function actionPermission($id){
+    public function actionPermission(){
+        $id = Yii::app()->request->getParam('id',0);
         $this->breadcrumbs = array($this->page_name . '权限编辑');
         $model = RbacRole::model()->findByPk($id);
+        if(Yii::app()->request->isAjaxRequest){
+            $permission = Yii::app()->request->getParam('permission',array());
+            if($permission){
+                $model->permission = implode(',', $permission);
+                $model->save();
+                if($model->hasErrors()){
+                    $this->handleResult(0, '操作失败');
+                }
+            }
+            $this->handleResult(1, '操作成功');
+        }
         $unlimit_data = $this->menu_data['unlimit_data'];
         $menu_data = array();
         foreach ($unlimit_data as $k=>$v){
@@ -91,7 +103,8 @@ class RoleController extends AdminBaseController {
                 $menu_data[$v['top_id']]['sub'][$v['id']] = $v;
             }
         }
-        $this->render('permission',array('model'=>$model,'menu_data' => $menu_data));
+        $permission_data = $model->permission ? explode(',', $model->permission) : array();
+        $this->render('permission',array('model'=>$model,'menu_data' => $menu_data,'permission_data'=>$permission_data));
     }
 
 }

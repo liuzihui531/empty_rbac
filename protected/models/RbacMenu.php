@@ -48,7 +48,7 @@ class RbacMenu extends CActiveRecord {
      */
     public function getUnlimitData() {
         $data = Yii::app()->cache->get($this->cache_key);
-        $data = false;
+        //$data = false;
         if (!$data['unlimit_data']) {
             $data = $this->setUnlimitData();
         }
@@ -58,7 +58,7 @@ class RbacMenu extends CActiveRecord {
     public function setUnlimitData() {
         $criteria = new CDbCriteria();
         $criteria->order = "sorting asc";
-        $model = $this->findAll();
+        $model = $this->findAll($criteria);
         $data = $this->getUnLimitClass($model);
         if ($data['unlimit_data']) {
             Yii::app()->cache->set($this->cache_key, $data);
@@ -68,6 +68,7 @@ class RbacMenu extends CActiveRecord {
 
     private function getUnLimitClass($model) {
         $unlimit_data = Utils::getUnLimitClass(Utils::object2array($model));
+        $unlimit_data = Utils::getSubColumnValueToParentKey($unlimit_data, 'id');
         $sub_limit = Utils::getSubUnlimit($model);
         foreach ($sub_limit as $k => $v) {
             $controller = array();

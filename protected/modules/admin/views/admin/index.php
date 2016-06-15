@@ -17,9 +17,7 @@
                             <?php if ($this->checkPermission($this->id . "/create")): ?>
                                 <a href="<?php echo $this->createUrl('create') ?>" class="btn btn-primary btn-sm">添加</a>
                             <?php endif; ?>
-                            <?php if ($this->checkPermission($this->id . "/delete")): ?>
-                                <a href="javascript:void(0)" data-url="<?php echo $this->createUrl('delete') ?>" class="btn btn-danger delete btn-sm">删除</a>
-                            <?php endif; ?>
+                            <a href="javascript:void(0)" data-url="<?php echo $this->createUrl('delete') ?>" class="btn btn-danger delete btn-sm">删除</a>
                         </form>
                     </div>
                 </div>
@@ -35,8 +33,8 @@
                                     <span class="lbl"></span>
                                 </label>
                             </th>
-                            <th>角色名称</th>
-                            <th>角色描述</th>
+                            <th>用户名</th>
+                            <th>角色</th>
                             <th class="hidden-480">创建时间</th>
 
                             <th></th>
@@ -52,13 +50,10 @@
                                         <span class="lbl"></span>
                                     </label>
                                 </td>
-                                <td><?php echo $v->role_name ?></td>
-                                <td><?php echo $v->role_desc ?></td>
+                                <td><?php echo $v->username ?></td>
+                                <td><?php echo isset($v->rbac_role) ? $v->rbac_role->role_name : "" ?></td>
                                 <td><?php echo date('Y-m-d H:i:s', $v->created) ?></td>
                                 <td>
-                                    <?php if ($this->checkPermission($this->id . "/permission")): ?>
-                                        <a href="<?php echo $this->createUrl('permission', array('id' => $v->id)) ?>">编辑权限</a>
-                                    <?php endif; ?>
                                     <?php if ($this->checkPermission($this->id . "/update")): ?>
                                         <a href="<?php echo $this->createUrl('update', array('id' => $v->id)) ?>">修改</a>
                                     <?php endif; ?>

@@ -24,7 +24,6 @@ class Controller extends CController {
      * for more details on how to specify this property.
      */
     public $breadcrumbs = array();
-    
     public $seo_title = '';
     public $seo_keyword = '';
     public $seo_description = '';
@@ -57,6 +56,67 @@ class Controller extends CController {
         if (!$model) {
             $this->handleResult(0, '数据为空', Yii::app()->request->urlReferrer);
         }
+    }
+
+    /**
+     * 成功提示
+     * @param type $msg 提示信息
+     * @param type $jumpurl 跳转url
+     * @param type $wait 等待时间
+     */
+    public function success($msg = "", $jumpurl = "", $wait = 1) {
+        self::_jump($msg, $jumpurl, $wait, 1);
+        exit;
+    }
+
+    public function jsonSuccess($msg = "", $jumpurl = "", $wait = 1) {
+        if ($jumpurl === "") {
+            $jumpurl = $_SERVER['HTTP_REFERER'];
+        }
+        echo $this->jsonHandle(1, $msg, $jumpurl, $wait);
+        exit;
+    }
+
+    public function jsonError($msg = "", $jumpurl = "", $wait = 3) {
+        echo $this->jsonHandle(0, $msg, $jumpurl, $wait);
+        exit;
+    }
+
+    function jsonHandle($status, $message, $jumpurl = "", $wait = 3) {
+        return CJSON::encode(array(
+                    'status' => $status, 'message' => $message, 'jumpurl' => $jumpurl, 'wait' => $wait));
+    }
+
+    /**
+     * 错误提示
+     * @param type $msg 提示信息
+     * @param type $jumpurl 跳转url
+     * @param type $wait 等待时间
+     * @param type $vip 是否提示需要开通vip
+     */
+    public function error($msg = "", $jumpurl = "", $wait = 3, $vip = '') {
+        self::_jump($msg, $jumpurl, $wait, 0, $vip);
+        exit;
+    }
+
+    /**
+     * 最终跳转处理
+     * @param type $msg 提示信息
+     * @param type $jumpurl 跳转url
+     * @param type $wait 等待时间
+     * @param int $type 消息类型 0或1
+     * @param type $vip 是否提示需要开通vip
+     */
+    static private function _jump($msg = "", $jumpurl = "", $wait = 1, $type = 0, $vip = '') {
+        $info = array('msg' => $msg,
+            'jumpurl' => $jumpurl,
+            'wait' => $wait,
+            'type' => $type,
+            'vip' => $vip
+        );
+
+        Yii::app()->user->setFlash('showmessage', $info);
+        Yii::app()->runController("Site/ShowMessage");
     }
 
 }

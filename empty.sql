@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2016-06-12 18:27:02
+Date: 2016-06-15 14:53:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,6 +23,7 @@ CREATE TABLE `admin` (
   `id` int(32) NOT NULL AUTO_INCREMENT,
   `username` varchar(16) NOT NULL DEFAULT '',
   `password` char(32) NOT NULL DEFAULT '',
+  `realname` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0禁用，1启用',
   `openid` varchar(64) NOT NULL DEFAULT '' COMMENT '管理员微信号',
   `last_login` int(32) NOT NULL DEFAULT '0',
@@ -30,14 +31,16 @@ CREATE TABLE `admin` (
   `role_id` int(10) NOT NULL DEFAULT '0' COMMENT '角色ID',
   `login_num` int(32) NOT NULL DEFAULT '0',
   `create_by` varchar(16) NOT NULL DEFAULT '' COMMENT '创建者',
+  `remark` text COMMENT '备注',
   `created` int(32) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='管理员表';
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='管理员表';
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', '1', 'ohs_4sgyk31vkfKLHy2wg5HrrGeo', '1465711443', '127.0.0.1', '1', '493', '', '1360085491');
+INSERT INTO `admin` VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', '', '1', 'ohs_4sgyk31vkfKLHy2wg5HrrGeo', '1465958775', '127.0.0.1', '1', '496', '', null, '1360085491');
+INSERT INTO `admin` VALUES ('3', 'yunying1', '96e79218965eb72c92a549dd5a330112', 'asdf', '1', '', '1465970684', '127.0.0.1', '2', '5', 'admin', 'asdf', '1465961416');
 
 -- ----------------------------
 -- Table structure for `news`
@@ -102,14 +105,14 @@ CREATE TABLE `rbac_menu` (
   `is_show` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0不显示，1显示',
   `created` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rbac_menu
 -- ----------------------------
 INSERT INTO `rbac_menu` VALUES ('1', '新闻资讯', '#', '0', '1', '新闻资讯', '1', '1465717449');
 INSERT INTO `rbac_menu` VALUES ('3', '分类管理', 'news_category/index', '1', '0', '', '1', '1465719290');
-INSERT INTO `rbac_menu` VALUES ('5', '分类添加', 'category/create', '3', '0', '', '0', '1465720556');
+INSERT INTO `rbac_menu` VALUES ('5', '分类添加', 'news_category/create', '3', '0', '', '0', '1465720556');
 INSERT INTO `rbac_menu` VALUES ('6', '分类修改', 'news_category/update', '3', '0', '', '0', '1465720865');
 INSERT INTO `rbac_menu` VALUES ('7', '分类添加操作', 'news_category/createSave', '3', '0', '', '0', '1465720894');
 INSERT INTO `rbac_menu` VALUES ('8', '分类修改操作', 'news_category/updateSave', '3', '0', '', '0', '1465720912');
@@ -120,13 +123,21 @@ INSERT INTO `rbac_menu` VALUES ('12', '修改资讯', 'news/update', '10', '0', 
 INSERT INTO `rbac_menu` VALUES ('13', '添加资讯操作', 'news/createSave', '10', '0', '', '0', '1465722053');
 INSERT INTO `rbac_menu` VALUES ('14', '修改资讯操作', 'news/updateSave', '10', '0', '', '0', '1465722117');
 INSERT INTO `rbac_menu` VALUES ('15', '删除资讯', 'news/delete', '10', '0', '', '0', '1465722130');
-INSERT INTO `rbac_menu` VALUES ('16', '权限配置', '#', '0', '0', '', '1', '1465722242');
+INSERT INTO `rbac_menu` VALUES ('16', '权限配置', '#', '0', '2', '', '1', '1465722242');
 INSERT INTO `rbac_menu` VALUES ('17', '菜单管理', 'rbac_menu/index', '16', '0', '', '1', '1465722289');
 INSERT INTO `rbac_menu` VALUES ('18', '菜单添加', 'rbac_menu/create', '17', '0', '', '0', '1465722306');
 INSERT INTO `rbac_menu` VALUES ('19', '菜单修改', 'rbac_menu/update', '17', '0', '', '0', '1465722323');
 INSERT INTO `rbac_menu` VALUES ('20', '菜单添加操作', 'rbac_menu/createSave', '17', '0', '', '1', '1465722342');
 INSERT INTO `rbac_menu` VALUES ('21', '菜单修改操作', 'rbac_menu/updateSave', '17', '0', '', '0', '1465722358');
 INSERT INTO `rbac_menu` VALUES ('22', '删除菜单', 'rbac_menu/delete', '17', '0', '', '0', '1465722376');
+INSERT INTO `rbac_menu` VALUES ('23', '管理员管理', 'admin/index', '16', '0', '', '1', '1465896372');
+INSERT INTO `rbac_menu` VALUES ('24', '角色管理', 'role/index', '16', '0', '', '1', '1465896396');
+INSERT INTO `rbac_menu` VALUES ('25', '修改角色', 'role/update', '24', '0', '', '0', '1465898535');
+INSERT INTO `rbac_menu` VALUES ('26', '添加角色', 'role/create', '24', '0', '', '0', '1465898594');
+INSERT INTO `rbac_menu` VALUES ('27', '修改角色-操作', 'role/updateSave', '24', '0', '', '0', '1465898621');
+INSERT INTO `rbac_menu` VALUES ('28', '添加角色-操作', 'role/createSave', '24', '0', '', '0', '1465898667');
+INSERT INTO `rbac_menu` VALUES ('29', '删除角色', 'role/delete', '24', '0', '', '0', '1465898678');
+INSERT INTO `rbac_menu` VALUES ('30', '编辑权限', 'role/permission', '24', '0', '', '0', '1465898721');
 
 -- ----------------------------
 -- Table structure for `rbac_role`
@@ -141,11 +152,12 @@ CREATE TABLE `rbac_role` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 （1 正常 ，2 删除）',
   `created` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Records of rbac_role
 -- ----------------------------
+INSERT INTO `rbac_role` VALUES ('2', '运营专员', 'dfasdf', '', '1,3,5,7,8,10,11,13,14', '1', '1465898275');
 
 -- ----------------------------
 -- Table structure for `upload`
