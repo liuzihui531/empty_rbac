@@ -339,7 +339,7 @@ window.jQuery || document.write("<script src='<?php echo Yii::app()->params['hos
             <!-- 实例化编辑器 -->
             <script src="<?php echo Yii::app()->params['host']; ?>/static/admin/js/ueditor.js"></script>
         <?php endif; ?>
-        <?php if ($this->is_ueditor)://用到编辑器 ?>
+        <?php if ($this->is_upload)://用到编辑器 ?>
             <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->params['host']; ?>/static/webuploader/css/webuploader.css" />
             <script type="text/javascript" src="<?php echo Yii::app()->params['host']; ?>/static/webuploader/dist/webuploader.js"></script>
             <script type="text/javascript" src="<?php echo Yii::app()->params['host']; ?>/static/admin/js/upload.js"></script>
