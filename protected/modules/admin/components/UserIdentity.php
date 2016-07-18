@@ -28,7 +28,7 @@ class UserIdentity extends CUserIdentity {
         else {
             $this->admin = $users;
             Yii::app()->session['admin'] = $users;
-            Yii::app()->session['permission'] = $users->rbac_role->permission;
+            Yii::app()->session['permission'] = isset($users->rbac_role) ? $users->rbac_role->permission : "";
             $this->_id = $users->id;
             $this->errorCode = self::ERROR_NONE;
         }
