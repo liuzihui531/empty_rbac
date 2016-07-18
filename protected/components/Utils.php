@@ -321,5 +321,79 @@ class Utils {
         }
         return $return;
     }
+		public static function getImageNameNotExt($img) {
+        if (!$img)
+            return "";
+        $img = substr($img, 0, strrpos($img, '.'));
+        $img = substr($img, strrpos($img, '/') + 1);
+        return $img;
+    }
+
+    public static function printr($data, $is_exit = true) {
+        header("Content-type:text/html;charset=utf-8");
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+        $is_exit && exit;
+    }
+
+    // 远程请求（不获取内容）函数
+    public static function sock_request($url) {
+        $host = parse_url($url, PHP_URL_HOST);
+        $port = parse_url($url, PHP_URL_PORT);
+        $port = $port ? $port : 80;
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+        $path = parse_url($url, PHP_URL_PATH);
+        $query = parse_url($url, PHP_URL_QUERY);
+        if ($query)
+            $path .= '?' . $query;
+        if ($scheme == 'https') {
+            $host = 'ssl://' . $host;
+        }
+        $error_code = 0;
+        $error_msg = "";
+        $fp = fsockopen($host, $port, $error_code, $error_msg, 1);
+        if (!$fp) {
+            $error_code = 1;
+            $error_msg = "远程错误";
+            return array('error_code' => $error_code, 'error_msg' => $error_msg);
+        } else {
+            stream_set_blocking($fp, true); //开启了手册上说的非阻塞模式
+            stream_set_timeout($fp, 1); //设置超时
+            $header = "GET $path HTTP/1.1\r\n";
+            $header.="Host: $host\r\n";
+            $header.="Connection: close\r\n\r\n"; //长连接关闭
+            fwrite($fp, $header);
+            usleep(1000); // 这一句也是关键，如果没有这延时，可能在nginx服务器上就无法执行成功
+            fclose($fp);
+            return array('error_code' => 0);
+        }
+    }
+
+    /**
+     * 将二维数组的某个值如id的值作为上级数组的key
+     * @param type $items
+     * @param type $key
+     * @return type
+     */
+    public static function getSubColumnValueToParentKey($items, $key) {
+        return array_combine(array_column($items, $key), $items);
+    }
+
+    /**
+     * 取无限级
+     */
+    public static function getSubUnlimit($model) {
+        $items = self::getSubColumnValueToParentKey(self::object2array($model), 'id');
+        $tree = array();
+        foreach ($items as $item) {
+            if (isset($items[$item['pid']])) {
+                $items[$item['pid']]['sub'][$item['id']] = &$items[$item['id']];
+            } else {
+                $tree[$item['id']] = &$items[$item['id']];
+            }
+        }
+        return $tree;
+    }
 
 }
